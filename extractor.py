@@ -83,7 +83,7 @@ class Extractor:
             return []
 
     @staticmethod
-    def _save_to_excel(links: list[WebElement], filename='links.xlsx'):
+    def _save_to_excel(links: list[WebElement], filename='links.xlsx') -> None:
         wb = openpyxl.Workbook()
         wb_active = wb.active
         wb_active.title = 'FB group members links'
