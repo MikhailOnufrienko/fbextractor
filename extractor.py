@@ -86,10 +86,13 @@ class Extractor:
         if not links:
             print('Страница не содержит ссылок на аккаунты пользователей.')
             return
+        href_quantity = 0
         for link in links:
-            if link.get_attribute('href') and '/user/' in link.get_attribute('href'):
-                print(link.get_attribute('href'))
-        print(f'Количество извлеченных ссылок: {len(links)}.')
+            href = link.get_attribute('href')
+            if href and '/user/' in href:
+                print(href)
+                href_quantity += 1
+        print(f'Количество извлеченных ссылок: {href_quantity}.')
 
 
 if __name__ == '__main__':
