@@ -1,3 +1,11 @@
+"""Достает из Facebook ссылки на страницы участников сообщества.
+При запуске скрипта из командной строки требует передачи трех аргументов (через пробел):
+- ссылка на страницу со списком участников сообщества
+(например, https://www.facebook.com/groups/426674414052346/members);
+- email пользователя;
+- пароль пользователя.
+"""
+
 import sys
 import time
 from typing import Optional
@@ -13,13 +21,6 @@ from webdriverfactory import WebDriverAbstractFactory, ChromeWebDriverFactory
 
 
 class Extractor:
-    """Достает из Facebook ссылки на страницы участников сообщества.
-    При запуске скрипта из командной строки требует передачи трех аргументов (через пробел):
-    - ссылка на страницу со списком участников сообщества
-    (например, https://www.facebook.com/groups/426674414052346/members);
-    - email пользователя;
-    - пароль пользователя.
-    """
     def __init__(self, driver_factory: WebDriverAbstractFactory):
         self.driver_factory = driver_factory
 
@@ -46,11 +47,11 @@ class Extractor:
     def _get_input_fields(driver, timeout=10) -> tuple[Optional[WebElement]]:
         try:
             email_input = WebDriverWait(driver, timeout).until(
-                    EC.element_to_be_clickable((By.ID, 'email'))
-                )
+                EC.element_to_be_clickable((By.ID, 'email'))
+            )
             password_input = WebDriverWait(driver, timeout).until(
-                    EC.element_to_be_clickable((By.ID, 'pass'))
-                )
+                EC.element_to_be_clickable((By.ID, 'pass'))
+            )
             return email_input, password_input
         except TimeoutException as e:
             print(f'Ошибка таймаут при загрузке полей для входа: {e}')
@@ -64,7 +65,7 @@ class Extractor:
         try:
             # Прокручиваем страницу вниз для загрузки участников
             last_height = driver.execute_script("return document.body.scrollHeight")
-            max_iterations = 10  # Ограничил количество итераций на случай, если в группе очень много участников
+            max_iterations = 10  # Ограничил количество итераций на случай, если в группе много участников
             for _ in range(max_iterations):
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 time.sleep(2)  # Ждем загрузку новой порции данных
