@@ -83,6 +83,9 @@ class Extractor:
 
     @staticmethod
     def _print_links(links: list[Optional[WebElement]]) -> None:
+        if not links:
+            print('Страница не содержит ссылок на аккаунты пользователей.')
+            return
         for link in links:
             if link.get_attribute('href') and '/user/' in link.get_attribute('href'):
                 print(link.get_attribute('href'))
