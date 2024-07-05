@@ -10,6 +10,7 @@ import sys
 import time
 from typing import Optional
 
+import openpyxl
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -38,7 +39,7 @@ class Extractor:
                 links = Extractor._scroll_and_parse(driver)
                 if not links:
                     return
-                Extractor._print_links(links)
+                Extractor._save_to_excel(links)
             except Exception as e:
                 print(f'Произошла ошибка: {e}')
                 return
@@ -82,17 +83,17 @@ class Extractor:
             return []
 
     @staticmethod
-    def _print_links(links: list[Optional[WebElement]]) -> None:
-        if not links:
-            print('Страница не содержит ссылок на аккаунты пользователей.')
-            return
-        href_quantity = 0
+    def _save_to_excel(links: list[WebElement], filename='links.xlsx'):
+        wb = openpyxl.Workbook()
+        wb_active = wb.active
+        wb_active.title = 'FB group members links'
+        wb_active.append(['Links:'])
         for link in links:
             href = link.get_attribute('href')
             if href and '/user/' in href:
-                print(href)
-                href_quantity += 1
-        print(f'Количество извлеченных ссылок: {href_quantity}.')
+                wb_active.append([href])
+        wb.save(filename)
+        print(f"Ссылки сохранены в файл {filename}.")
 
 
 if __name__ == '__main__':
